@@ -1,0 +1,89 @@
+/* Styles généraux pour le corps de la page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Conteneur principal pour les écrans */
+.container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Titres des écrans */
+h2 {
+    margin-bottom: 20px;
+    color: #007BFF;
+}
+
+/* Styles pour les champs de texte et les boutons */
+input[type="text"],
+input[type="number"],
+button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+/* Boutons généraux */
+button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Effet au survol des boutons */
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Zone pour afficher les messages reçus */
+#messages {
+    height: 300px;
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    text-align: left;
+}
+
+/* Champ de saisie des messages */
+#messageInput {
+    width: calc(100% - 22px);
+    display: inline-block;
+}
+
+/* Bouton d'envoi */
+#sendButton {
+    width: 100%;
+}
+
+/* Bouton de déconnexion avec une couleur rouge */
+#disconnectButton {
+    background-color: #dc3545;
+}
+
+/* Effet au survol pour le bouton de déconnexion */
+#disconnectButton:hover {
+    background-color: #c82333;
+}

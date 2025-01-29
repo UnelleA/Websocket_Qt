@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat WebSocket</title>
+    <!-- Lien vers le fichier CSS externe -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Écran de connexion -->
+    <div id="connectScreen" class="container">
+        <h2>Connexion au serveur</h2>
+        <input type="text" id="username" placeholder="Nom d'utilisateur" required><br>
+        <input type="text" id="serverIp" placeholder="Adresse IP du serveur" required><br>
+        <input type="number" id="serverPort" placeholder="Port du serveur" required><br>
+        <button id="connectButton">Se connecter</button>
+    </div>
+
+    <!-- Écran de chat -->
+    <div id="chatScreen" class="container" style="display: none;">
+        <h2>Chat</h2>
+        <div id="messages"></div>
+        <input type="text" id="messageInput" placeholder="Entrez votre message..." required>
+        <button id="sendButton">Envoyer</button>
+        <button id="disconnectButton">Déconnexion</button>
+    </div>
+
+    <script>
+        let socket;
+
+        // Récupération des éléments DOM
+        const connectScreen = document.getElementById('connectScreen');
+        const chatScreen = document.getElementById('chatScreen');
+        const usernameInput = document.getElementById('username');
+        const serverIpInput = document.getElementById('serverIp');
+        const serverPortInput = document.getElementById('serverPort');
+        const connectButton = document.getElementById('connectButton');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const messagesDiv = document.getElementById('messages');
+        const disconnectButton = document.getElementById('disconnectButton');
+
+        // Connexion au serveur WebSocket
+        connectButton.addEventListener('click', () => {
+            const username = usernameInput.value;
+            const serverIp = serverIpInput.value;
+            const serverPort = serverPortInput.value;
+
+            // Vérification des champs requis
+            if (!username || !serverIp || !serverPort) {
+                alert("Veuillez remplir tous les champs.");
+                return;
+            }
+
+            // Création de l'URL WebSocket
+            const url = `ws://${serverIp}:${serverPort}`;
+            socket = new WebSocket(url);
+
+            // Événement lorsque la connexion est ouverte
+            socket.onopen = () => {
+                alert("Connecté au serveur !");
+                connectScreen.style.display = 'none';
+                chatScreen.style.display = 'block';
+            };
+
+            // Réception d'un message du serveur
+            socket.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                const message = `[${data.timestamp}] ${data.user}: ${data.message}`;
+                messagesDiv.innerHTML += `<div>${message}</div>`;
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            };
+
+            // Gestion de la fermeture de la connexion
+            socket.onclose = () => {
+                alert("Déconnecté du serveur.");
+                connectScreen.style.display = 'block';
+                chatScreen.style.display = 'none';
+                messagesDiv.innerHTML = ''; // Effacer les messages après déconnexion
+            };
+
+            // Gestion des erreurs de connexion
+            socket.onerror = (error) => {
+                alert("Erreur de connexion : " + error.message);
+            };
+        });
+
+        // Envoi d'un message au serveur
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value;
+            const username = usernameInput.value;
+
+            if (message && socket) {
+                const jsonMessage = JSON.stringify({ user: username, message: message });
+                socket.send(jsonMessage);
+                messageInput.value = '';
+            }
+        });
+
+        // Déconnexion du serveur
+        disconnectButton.addEventListener('click', () => {
+            if (socket) {
+                socket.close();
+            }
+        });
+    </script>
+
+</body>
+</html>
